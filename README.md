@@ -1,5 +1,5 @@
 # Secure-FastAPI-App-CertBot-Nginx-and-Gunicorn.
-Meduim Post
+Article Post
 
 You can use any of the following configuration Files as follows.
 
