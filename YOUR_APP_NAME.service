@@ -1,0 +1,12 @@
+[Unit]
+Description=Gunicorn your_fastapi_app_name for FastAPI Application
+After=network.target
+
+[Service]
+User=demo
+Group=www-data
+WorkingDirectory=/home/your_fastapi_app_directory
+ExecStart=/home/your_fastapi_app_directory/bin/gunicorn -c gunicorn_conf.py app:app
+
+[Install]
+WantedBy=multi-user.target
