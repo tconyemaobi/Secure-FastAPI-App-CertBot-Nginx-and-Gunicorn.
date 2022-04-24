@@ -1,0 +1,43 @@
+server {
+    server_name service.example.org IP_ADDRESS;
+    server_tokens off;
+    charset utf-8;
+
+    location /static {
+        gzip            on;
+        gzip_buffers    8 256k;
+
+        alias /home/your_fastapi_app_directory/static;
+        expires 365d;
+    }
+    location / {
+        try_files $uri @yourapplication;
+    }
+    location @yourapplication {
+        gzip            on;
+        gzip_buffers    8 256k;
+
+        proxy_pass http://127.0.0.1:{YOUR _APP_PORT};
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-Protocol $scheme;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/service.example.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/service.example.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = service.example.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name service.example.org IP_ADDRESS;
+    return 404; # managed by Certbot
+
+}
